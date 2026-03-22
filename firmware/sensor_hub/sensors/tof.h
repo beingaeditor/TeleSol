@@ -9,6 +9,7 @@ struct ToFData {
     uint8_t rangeStatus;
 };
 
+void initToF();
 ToFData readToF();
 
 #endif // TOF_H

@@ -9,6 +9,7 @@ struct AudioData {
     bool isCrowdNoise;
 };
 
+void initMicrophone();
 AudioData readAudio();
 
 #endif // MICROPHONE_H

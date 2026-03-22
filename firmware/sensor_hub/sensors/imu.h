@@ -10,6 +10,7 @@ struct IMUData {
     float vibrationMagnitude;
 };
 
+void initIMU();
 IMUData readIMU();
 
 #endif // IMU_H

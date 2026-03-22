@@ -10,6 +10,7 @@ struct RadarData {
     uint8_t energyLevel;
 };
 
+void initRadar(int rxPin, int txPin, long baud);
 RadarData readRadar();
 
 #endif // RADAR_H

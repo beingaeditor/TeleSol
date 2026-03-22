@@ -9,6 +9,7 @@ struct CameraData {
     bool motionDetected;
 };
 
+bool initCamera();
 CameraData readCamera();
 
 #endif // PERSON_COUNTER_H
