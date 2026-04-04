@@ -1,61 +1,99 @@
-import { useState, useEffect } from 'react';
-import LoginScreen from './components/LoginScreen';
-import DeveloperDashboard from './components/DeveloperDashboard';
-import TelecomDashboard from './components/TelecomDashboard';
+// ═══════════════════════════════════════════════════════
+// CrowdShield — App Shell
+// Layout with Sidebar + TopBar + page content
+// ═══════════════════════════════════════════════════════
+
+import { useState } from 'react';
+import Sidebar from './components/layout/Sidebar';
+import TopBar from './components/layout/TopBar';
+import DashboardPage from './components/dashboard/DashboardPage';
+import MapViewPage from './components/map/MapViewPage';
+import AnalyticsPage from './components/analytics/AnalyticsPage';
+import AlertsPage from './components/alerts/AlertsPage';
+import SimulationPage from './components/simulation/SimulationPage';
+import { useSimulation } from './hooks/useSimulation';
+import { useRealTimeData } from './hooks/useRealTimeData';
+
+const PAGE_TITLES = {
+  dashboard: 'Command Center',
+  map: 'Zone Map',
+  analytics: 'Analytics',
+  alerts: 'Alert Management',
+  simulation: 'Simulation Lab',
+};
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState('dashboard');
+  const { isConnected } = useRealTimeData();
 
-  // Check for saved session on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem('telesol_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        localStorage.removeItem('telesol_user');
-      }
+  const sim = useSimulation();
+  const criticalCount = sim.alerts.filter(a => a.severity === 'critical').length;
+
+  function renderPage() {
+    switch (currentPage) {
+      case 'dashboard':
+        return <DashboardPage zones={sim.zones} alerts={sim.alerts} kpis={sim.kpis} />;
+      case 'map':
+        return <MapViewPage zones={sim.zones} />;
+      case 'analytics':
+        return <AnalyticsPage zones={sim.zones} />;
+      case 'alerts':
+        return <AlertsPage alerts={sim.alerts} zones={sim.zones} />;
+      case 'simulation':
+        return (
+          <SimulationPage
+            zones={sim.zones}
+            alerts={sim.alerts}
+            params={sim.params}
+            updateParam={sim.updateParam}
+            isRunning={sim.isRunning}
+            setIsRunning={sim.setIsRunning}
+            speed={sim.speed}
+            setSpeed={sim.setSpeed}
+            simTime={sim.simTime}
+            resetSimulation={sim.resetSimulation}
+            kpis={sim.kpis}
+          />
+        );
+      default:
+        return <DashboardPage zones={sim.zones} alerts={sim.alerts} kpis={sim.kpis} />;
     }
-    setIsLoading(false);
-  }, []);
+  }
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-    localStorage.setItem('telesol_user', JSON.stringify(userData));
-  };
+  return (
+    <div className="min-h-screen bg-crowd-bg text-crowd-text-primary">
+      {/* Ambient glow */}
+      <div className="ambient-bg" />
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('telesol_user');
-  };
+      {/* Sidebar */}
+      <Sidebar
+        currentPage={currentPage}
+        onNavigate={(page) => {
+          setCurrentPage(page);
+          // Auto-enter simulation mode when going to simulation page
+          if (page === 'simulation' && sim.mode !== 'simulation') sim.toggleMode();
+          // Auto-exit simulation mode when leaving simulation page
+          if (page !== 'simulation' && sim.mode === 'simulation') sim.toggleMode();
+        }}
+        isConnected={isConnected}
+        alertCount={criticalCount}
+      />
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-telesol-bg flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-telesol-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading TeleSol...</p>
-        </div>
+      {/* Main Content Area */}
+      <div className="ml-[68px] lg:ml-[220px] transition-all duration-300">
+        <TopBar
+          pageTitle={PAGE_TITLES[currentPage] || 'Dashboard'}
+          mode={sim.mode}
+          onToggleMode={() => {
+            sim.toggleMode();
+            if (sim.mode === 'live') setCurrentPage('simulation');
+          }}
+        />
+
+        <main className="p-4 lg:p-5 relative z-10">
+          {renderPage()}
+        </main>
       </div>
-    );
-  }
-
-  // Not logged in - show login screen
-  if (!user) {
-    return <LoginScreen onLogin={handleLogin} />;
-  }
-
-  // Logged in - show appropriate dashboard
-  if (user.role === 'developer') {
-    return <DeveloperDashboard onLogout={handleLogout} />;
-  }
-
-  if (user.role === 'telecom') {
-    return <TelecomDashboard user={user} onLogout={handleLogout} />;
-  }
-
-  // Fallback
-  return <LoginScreen onLogin={handleLogin} />;
+    </div>
+  );
 }
