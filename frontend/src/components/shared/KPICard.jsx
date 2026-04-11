@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — KPI Card Component
+// TeleSol — KPI Card Component
 // Large metric display with icon, trend, and status color
 // ═══════════════════════════════════════════════════════
 

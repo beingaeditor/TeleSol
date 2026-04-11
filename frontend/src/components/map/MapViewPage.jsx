@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Map View Page
+// TeleSol — Map View Page
 // Full-screen map with zone details sidebar
 // ═══════════════════════════════════════════════════════
 

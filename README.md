@@ -1,22 +1,47 @@
 # TeleSol — Predictive Telecom Congestion Intelligence
 
-Real-time crowd monitoring and telecom congestion prediction using ESP32 sensors.
+Real-time crowd monitoring and telecom congestion prediction using ESP-12E sensors + iOS/Android companion apps.
 
-## Architecture
+## Architecture (v3.0)
 ```
-ESP32 Sensor Hub ──┐
-                   ├──► FastAPI Backend ──► React Dashboard
-ESP32-CAM Node ────┘        (CRS Engine)       (NOC View)
+ESP-12E Sensor Hub ──┐
+  • HLK-LD2420 Radar  │
+  • VL53L0X ToF       ├──► FastAPI Backend ──► React Dashboard
+  • MPU6050 IMU       │     (CRS Engine)       (NOC View)
+                      │
+Phone Companion ─────┘
+  • Camera (person count)
+  • Microphone (noise dB)
+  • GPS (location)
+  • Supports: iOS + Android
 ```
 
 ## Structure
 | Folder | Description |
 |--------|-------------|
-| `firmware/sensor_hub/` | ESP32 DevKit — radar, ToF, mic, IMU, OLED |
-| `firmware/camera_node/` | ESP32-CAM — person counting via frame differencing |
-| `backend/` | FastAPI + WebSocket — sensor ingestion, CRS calculation, alerts |
-| `frontend/` | React + Vite + TailwindCSS — NOC dashboard with live map |
+| `firmware/esp12e/` | ESP-12E (ESP8266) — radar, ToF, IMU firmware |
+| `firmware/sensor_hub/` | Legacy ESP32 DevKit firmware |
+| `firmware/camera_node/` | Legacy ESP32-CAM firmware |
+| `mobile/ios/TeleSol/` | iOS companion app (Swift/SwiftUI) |
+| `mobile/android/TeleSol/` | Android companion app (Kotlin/Compose) |
+| `backend/` | FastAPI + WebSocket — sensor ingestion, CRS, mobile API |
+| `frontend/` | React + Vite + TailwindCSS — NOC dashboard |
 | `docs/` | API reference, wiring diagrams |
+
+## Sensors (ESP-12E)
+| Sensor | Interface | Purpose |
+|--------|-----------|---------|
+| HLK-LD2420 | SoftwareSerial (D5/D6) | 24GHz radar — human presence + motion |
+| VL53L0X/1XV2 | I2C (0x29) | ToF — doorway passage counting |
+| MPU6050 | I2C (0x68) | IMU — vibration from foot traffic |
+
+## Phone Companion Features
+| Feature | iOS | Android |
+|---------|-----|---------|
+| Camera (person detection) | Vision Framework | ML Kit |
+| Microphone (noise level) | AVAudioRecorder | AudioRecord |
+| GPS Location | CoreLocation | FusedLocationProvider |
+| Backend streaming | URLSession | OkHttp |
 
 ## CRS Formula
 ```
@@ -40,9 +65,48 @@ npm install
 npm run dev
 ```
 
-### ESP32 Firmware
-1. Edit `config.h` in each firmware folder — set WiFi and backend URL
-2. Flash using Arduino IDE with ESP32 board support
+### ESP-12E Firmware
+1. Install Arduino IDE with **ESP8266 board support**
+2. Install libraries: `Adafruit VL53L0X`, `MPU6050_light`, `ArduinoJson`
+3. Open `firmware/esp12e/telesol_esp12e.ino`
+4. Edit `config.h` — set WiFi SSID/password and backend IP
+5. Select board: **NodeMCU 1.0 (ESP-12E Module)**
+6. Upload!
+
+### iOS App
+1. Open `mobile/ios/TeleSol/` in Xcode
+2. Build and run on your iPhone
+3. In Settings tab, enter your backend URL (e.g., `http://192.168.1.50:8000`)
+4. Tap "Start Streaming" on Dashboard
+
+### Android App
+1. Open `mobile/android/TeleSol/` in Android Studio
+2. Build and run on your device
+3. Grant camera, microphone, and location permissions
+4. Configure backend URL in Settings
+
+## ESP-12E Wiring
+```
+ESP-12E              Sensors
+════════             ══════
+GPIO4 (D2) ─SDA─┬── VL53L0X SDA ── MPU6050 SDA
+GPIO5 (D1) ─SCL─┴── VL53L0X SCL ── MPU6050 SCL
+GPIO14(D5) ─RX───── HLK-LD2420 TX
+GPIO12(D6) ─TX───── HLK-LD2420 RX
+3.3V ────────────┬── VL53L0X VCC ── MPU6050 VCC
+VIN (5V) ────────┴── HLK-LD2420 VCC
+GND ─────────────── All GNDs
+```
+
+## API Endpoints
+| Method | Path | Source |
+|--------|------|--------|
+| POST | `/api/sensors/data` | ESP-12E pushes sensor data |
+| POST | `/api/mobile/register` | Phone registers on launch |
+| POST | `/api/mobile/stream` | Phone streams camera/mic/GPS |
+| GET | `/api/mobile/status` | Connected phone status |
+| GET | `/api/dashboard/all` | Full dashboard data |
+| WS | `/ws` | Real-time dashboard updates |
 
 ## Theme
 - Dark mode (#0D1117)

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Camera -->
+    <key>NSCameraUsageDescription</key>
+    <string>TeleSol uses the camera to detect and count people for crowd monitoring and telecom congestion prediction.</string>
+
+    <!-- Microphone -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>TeleSol uses the microphone to measure ambient noise levels for crowd density estimation.</string>
+
+    <!-- Location -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>TeleSol uses your location to associate sensor data with geographic zones for crowd monitoring.</string>
+
+    <!-- App Transport Security (allow local HTTP) -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>location</string>
+    </array>
+
+    <!-- Supported Orientations -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+
+    <!-- Bundle Info -->
+    <key>CFBundleName</key>
+    <string>TeleSol</string>
+    <key>CFBundleDisplayName</key>
+    <string>TeleSol</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.telesol.companion</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+</dict>
+</plist>

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Simulation Engine
+// TeleSol — Simulation Engine
 // Computes zone risk dynamically based on slider inputs
 // ═══════════════════════════════════════════════════════
 

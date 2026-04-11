@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Alerts Page
+// TeleSol — Alerts Page
 // Full alert history with severity filters
 // ═══════════════════════════════════════════════════════
 

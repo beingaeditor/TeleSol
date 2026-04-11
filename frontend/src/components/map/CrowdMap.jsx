@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Crowd Map (MOST IMPORTANT COMPONENT)
+// TeleSol — Crowd Map (MOST IMPORTANT COMPONENT)
 // Interactive Leaflet map with risk-colored zones
 // ═══════════════════════════════════════════════════════
 

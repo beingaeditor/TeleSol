@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — App Shell
-// Layout with Sidebar + TopBar + page content
+// TeleSol — App Shell
+// Live mode → real sensor data from backend
+// Simulation mode → simulation engine (offline testing)
 // ═══════════════════════════════════════════════════════
 
 import { useState } from 'react';
@@ -24,21 +25,67 @@ const PAGE_TITLES = {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const { isConnected } = useRealTimeData();
 
+  // Real data from backend (ESP sensors + iPhone companion)
+  const realTime = useRealTimeData();
+
+  // Simulation engine (for simulation page only)
   const sim = useSimulation();
-  const criticalCount = sim.alerts.filter(a => a.severity === 'critical').length;
+
+  // In live mode → use real data. In simulation → use sim data.
+  const isSimMode = sim.mode === 'simulation';
+
+  // Zones: real sensor zone in live mode, sim zones in sim mode
+  const zones = isSimMode ? sim.zones : [realTime.sensorZone];
+
+  // Alerts: real alerts in live mode, sim alerts in sim mode
+  const alerts = isSimMode ? sim.alerts : realTime.realAlerts;
+
+  // KPIs: real in live mode, derived from sim in sim mode
+  const kpis = isSimMode ? sim.kpis : {
+    activeZones: 1,
+    avgRiskScore: realTime.kpis.crsScore,
+    highRiskAlerts: realTime.realAlerts.filter(a => a.severity === 'critical').length,
+    peakDensity: realTime.kpis.crowdDensity,
+  };
+
+  const criticalCount = alerts.filter(a => a.severity === 'critical').length;
 
   function renderPage() {
     switch (currentPage) {
       case 'dashboard':
-        return <DashboardPage zones={sim.zones} alerts={sim.alerts} kpis={sim.kpis} />;
+        return (
+          <DashboardPage
+            zones={zones}
+            alerts={alerts}
+            kpis={kpis}
+            phoneFrame={realTime.phoneFrame}
+            phonePersonCount={realTime.phonePersonCount}
+            phoneNoiseDb={realTime.phoneNoiseDb}
+            isPhoneConnected={realTime.isPhoneConnected}
+            crsData={realTime.crsData}
+            crsHistory={realTime.crsHistory}
+            sensorCards={realTime.sensorCards}
+            sensorHealth={realTime.sensorHealth}
+            liveData={realTime.liveData}
+            realKpis={realTime.kpis}
+          />
+        );
       case 'map':
-        return <MapViewPage zones={sim.zones} />;
+        return <MapViewPage zones={zones} />;
       case 'analytics':
-        return <AnalyticsPage zones={sim.zones} />;
+        return (
+          <AnalyticsPage
+            zones={zones}
+            crsHistory={realTime.crsHistory}
+            sensorHistory={realTime.sensorHistory}
+            crsData={realTime.crsData}
+            liveData={realTime.liveData}
+            sensorHealth={realTime.sensorHealth}
+          />
+        );
       case 'alerts':
-        return <AlertsPage alerts={sim.alerts} zones={sim.zones} />;
+        return <AlertsPage alerts={alerts} zones={zones} />;
       case 'simulation':
         return (
           <SimulationPage
@@ -56,7 +103,7 @@ export default function App() {
           />
         );
       default:
-        return <DashboardPage zones={sim.zones} alerts={sim.alerts} kpis={sim.kpis} />;
+        return <DashboardPage zones={zones} alerts={alerts} kpis={kpis} />;
     }
   }
 
@@ -70,12 +117,10 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={(page) => {
           setCurrentPage(page);
-          // Auto-enter simulation mode when going to simulation page
           if (page === 'simulation' && sim.mode !== 'simulation') sim.toggleMode();
-          // Auto-exit simulation mode when leaving simulation page
           if (page !== 'simulation' && sim.mode === 'simulation') sim.toggleMode();
         }}
-        isConnected={isConnected}
+        isConnected={realTime.isConnected}
         alertCount={criticalCount}
       />
 

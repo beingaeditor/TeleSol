@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Simulation Hook
+// TeleSol — Simulation Hook
 // Manages live/simulation toggle and simulation state
 // ═══════════════════════════════════════════════════════
 

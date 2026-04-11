@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Skeleton Loading Component
+// TeleSol — Skeleton Loading Component
 // Shimmer placeholder for async loading states
 // ═══════════════════════════════════════════════════════
 

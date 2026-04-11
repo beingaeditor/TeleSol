@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Simulation Page
+// TeleSol — Simulation Page
 // Interactive sliders + live map → watch zones change
 // ═══════════════════════════════════════════════════════
 

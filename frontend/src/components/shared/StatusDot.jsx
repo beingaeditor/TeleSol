@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — StatusDot Component
+// TeleSol — StatusDot Component
 // Animated status indicator with optional pulse ring
 // ═══════════════════════════════════════════════════════
 

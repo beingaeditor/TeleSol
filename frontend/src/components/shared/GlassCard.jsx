@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — GlassCard Component
+// TeleSol — GlassCard Component
 // Reusable glassmorphism card with glow + pulse options
 // ═══════════════════════════════════════════════════════
 

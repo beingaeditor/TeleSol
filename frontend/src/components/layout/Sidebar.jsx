@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Sidebar Navigation
+// TeleSol — Sidebar Navigation
 // Collapsible sidebar with page navigation + branding
 // ═══════════════════════════════════════════════════════
 
@@ -39,7 +39,7 @@ export default function Sidebar({ currentPage, onNavigate, isConnected, alertCou
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <h1 className="text-sm font-bold font-display text-crowd-text-primary tracking-wide">CrowdShield</h1>
+            <h1 className="text-sm font-bold font-display text-crowd-text-primary tracking-wide">TeleSol</h1>
             <p className="text-[10px] text-crowd-text-muted uppercase tracking-widest">Intelligence</p>
           </div>
         )}

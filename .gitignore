@@ -70,4 +70,6 @@ temp/
 # Secrets
 .env*
 config/*.secret
+ssl_key.pem
+ssl_cert.pem
 # (Keep config.h tracked if required; don't broadly ignore it.)

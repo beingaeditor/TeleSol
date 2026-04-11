@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Risk Badge Component
+// TeleSol — Risk Badge Component
 // Circular SVG ring with color-coded risk score
 // ═══════════════════════════════════════════════════════
 

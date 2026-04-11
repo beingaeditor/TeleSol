@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — TopBar Component
+// TeleSol — TopBar Component
 // Status bar with mode toggle, clock, and page title
 // ═══════════════════════════════════════════════════════
 
@@ -66,7 +66,7 @@ export default function TopBar({ pageTitle, mode, onToggleMode }) {
           </span>
         </div>
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-crowd-cyan/20 to-crowd-purple/20 border border-crowd-border flex items-center justify-center">
-          <span className="text-xs font-bold text-crowd-cyan">CS</span>
+          <span className="text-xs font-bold text-crowd-cyan">TS</span>
         </div>
       </div>
     </header>

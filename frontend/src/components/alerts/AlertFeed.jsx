@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// CrowdShield — Alert Feed Component
+// TeleSol — Alert Feed Component
 // Compact scrollable alert list with slide-in animation
 // ═══════════════════════════════════════════════════════
 
